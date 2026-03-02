@@ -31,17 +31,19 @@ login: async (email, password) => {
   }
 },
 
-  register: async (name, email, password) => {
-    set({ loading: true, error: null });
-    try {
-      const { data } = await api.post('/auth/register', { name, email, password });
-      set({ loading: false });
-      return { success: true, userId: data.userId };
-    } catch (err) {
-      set({ loading: false, error: err.response?.data?.message || 'Registration failed' });
-      return { success: false };
-    }
-  },
+register: async (name, email, password) => {
+  set({ loading: true, error: null });
+  try {
+    const { data } = await api.post('/auth/register', { name, email, password });
+    localStorage.setItem('pump_token', data.token);
+    localStorage.setItem('pump_user', JSON.stringify(data.user));
+    set({ user: data.user, token: data.token, loading: false });
+    return { success: true };
+  } catch (err) {
+    set({ loading: false, error: err.response?.data?.message || 'Registration failed' });
+    return { success: false };
+  }
+},
 
   verifyOTP: async (userId, otp, isLogin = false) => {
     set({ loading: true, error: null });

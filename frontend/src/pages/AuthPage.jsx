@@ -25,15 +25,13 @@ export default function AuthPage() {
         setMode('otp');
         toast.success(t('otpSent'));
       } else toast.error(t('error'));
-    } else {
-      const res = await register(form.name, form.email, form.password);
-      if (res.success) {
-        setUserId(res.userId);
-        setIsLoginOTP(false);
-        setMode('otp');
-        toast.success(t('otpSent'));
-      } else toast.error(t('error'));
-    }
+} else {
+  const res = await register(form.name, form.email, form.password);
+  if (res.success) {
+    toast.success('ברוך הבא ל-PumP! 💪');
+    navigate('/dashboard');
+  } else toast.error(t('error'));
+}
   };
 
   const handleVerifyOTP = async (e) => {
