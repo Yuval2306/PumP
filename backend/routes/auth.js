@@ -62,6 +62,7 @@ router.post('/verify-otp', async (req, res) => {
 });
 
 // LOGIN
+// LOGIN
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -72,13 +73,8 @@ router.post('/login', async (req, res) => {
     const isMatch = await user.comparePassword(password);
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-    const otp = generateOTP();
-    user.otp = otp;
-    user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
-    await user.save();
-
-    await sendOTPEmail(email, user.name, otp);
-    res.json({ message: 'OTP sent', userId: user._id.toString() });
+    const token = signToken(user._id);
+    res.json({ token, user: sanitizeUser(user) });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
