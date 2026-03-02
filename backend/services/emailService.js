@@ -30,8 +30,7 @@ const sendOTPEmail = async (email, name, otp) => {
         <body>
           <div class="container">
             <div class="header">
-              <h1>PumP</h1>
-              <p>Fitness & Nutrition Platform</p>
+              <img src="https://raw.githubusercontent.com/Yuval2306/PumP/main/frontend/public/PumP_logo.png" alt="PumP" style="height: 100px; object-fit: contain;" />
             </div>
             <div class="body">
               <p class="greeting">Hey ${name}! 💪</p>
