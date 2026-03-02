@@ -21,7 +21,7 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Email already in use' });
 
     const otp = generateOTP();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
     const user = await User.create({
       name,
@@ -33,7 +33,7 @@ router.post('/register', async (req, res) => {
     });
 
     await sendOTPEmail(email, name, otp);
-    res.status(201).json({ message: 'OTP sent to email', userId: user._id });
+    res.status(201).json({ message: 'OTP sent to email', userId: user._id.toString() });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error', error: err.message });
@@ -72,14 +72,13 @@ router.post('/login', async (req, res) => {
     const isMatch = await user.comparePassword(password);
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-    // Send OTP for 2FA
     const otp = generateOTP();
     user.otp = otp;
     user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
     await sendOTPEmail(email, user.name, otp);
-    res.json({ message: 'OTP sent', userId: user._id });
+    res.json({ message: 'OTP sent', userId: user._id.toString() });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
